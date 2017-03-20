@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# But not these files...
+!.bashrc
+!.gitignore
+!.tmux.conf
+!.vimrc
+!.Xauthority
+!.Xmodmap
+!.zshrc
