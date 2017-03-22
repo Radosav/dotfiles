@@ -43,6 +43,24 @@ fixsql(){
     echo "done."
 }
 
+# Changes database values to work on local
+# Works for M2 and M1
+localizedb(){
+    user="root"
+    database=$1
+    url=$2
+    ext=".local.com/"
+    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%base_url%\";")
+    echo $(mysql $database -u$user<<<"update core_config_data set value=\"http://$url$ext\" where path like \"%base_url%\";")
+    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%base_url%\";")
+
+    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%web/seo%\";")
+    echo $(mysql $database -u$user<<<"update core_config_data set value=0 where path like \"%web/seo%\";")
+    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%web/seo%\";")
+
+    echo "Database localized!"
+}
+
 # Use to install/update extension as "update {PROJECT_NAME}" from extension magento root
 # Change projects folder path if needed (line 3)
 update(){
