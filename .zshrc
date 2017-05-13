@@ -65,21 +65,43 @@ localizedb(){
 # Change projects folder path if needed (line 3)
 update(){
     find . -type f -exec touch {} ;\
-    rsync -azP . ~/projects/$1/
+    rsync -azP --exclude '.git' --exclude '.gitignore' . ~/projects/$1/
 }
 
 # Creates admin user for M2, change username and password to your prefference
-createadminuser2(){
+m2createadminuser(){
     n98-magerun2.phar admin:user:create --admin-user="rasa" --admin-firstname="a" --admin-lastname="b" --admin-email="a@gmail.com" --admin-password="archer227"
 }
 
+m2install(){
+    php56 bin/magento setup:install --db-name="{$1}" --db-user="root" --db-password=""  --admin-user="admin" --admin-password="12qwaszx" --admin-email="a@a.com" --admin-firstname="Developer" --admin-lastname="Younify" --cleanup-database --use-sample-data
+
+}
+
+# Total regeneration of M2 website;
+alias regenm2='rm -rf var/cache var/generation var/page_cache var/view_preprocessed; bin/magento cache:flush; bin/magento setup:upgrade; bin/magento setup:static-content:deploy nl_NL en_US'
+
 # cd to projects frolder, change path if needed 
 alias cdp='cd ~/projects'
+
 # set correct permissions for M2
 alias m2perms='find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \; && find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \; && chmod u+x bin/magento'
+
 # cd to project root ( git root )
 alias cdr='cd "$(git rev-parse --show-cdup)"'
+
 # flush caches from anywhere in project
 alias rmc='pushd . >/dev/null;cd "$(git rev-parse --show-cdup)";rm -rf var/cache;echo "cleared cache in $(pwd)/var/cache";popd>/dev/null;'
+
+alias tmux='
+tmux new-session -d "cd ~/projects;vim"
+set -g window-active-style "bg=black";
+tmux splitw -v -p 30;
+tmux selectp -t 1;
+tmux splitw -h;
+tmux selectp -t 0;
+tmux -2 attach-session -d;
+'
+
 # Pretty git log
 alias glp='git log --graph --full-history --all --color --pretty=format:"%Cred[%d ] %Cgreen%p -> %h %Cblue%cn(%ce) %Cred%s %n"'

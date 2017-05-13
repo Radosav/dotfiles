@@ -73,6 +73,9 @@ Bundle 'groenewege/vim-less'
 
 " Coffee-script syntax.
 Bundle 'kchmck/vim-coffee-script'
+ 
+" NERDTree
+Bundle 'scrooloose/nerdtree'
 
 
 " We have to turn this stuff back on if we want all of our features.
@@ -165,3 +168,11 @@ let g:ctrlp_max_height = 30
 " Finally the color scheme. Choose whichever you want from the list in the
 " link above (back up where we included the bundle of a ton of themes.)
 colorscheme 256-grayvim
+
+function! StartUp()
+    if 0 == argc()
+        NERDTree ~/projects
+    end
+endfunction
+
+autocmd VimEnter * call StartUp()
