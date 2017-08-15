@@ -49,14 +49,16 @@ localizedb(){
     user="root"
     database=$1
     url=$2
+    core_config_data_raw="core_config_data"
+    core_config_data=$3$core_config_data_raw
     ext=".local.com/"
-    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%base_url%\";")
-    echo $(mysql $database -u$user<<<"update core_config_data set value=\"http://$url$ext\" where path like \"%base_url%\";")
-    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%base_url%\";")
+    echo $(mysql $database -u$user<<<"select * from $core_config_data where path like \"%base_url%\";")
+    echo $(mysql $database -u$user<<<"update $core_config_data set value=\"http://$url$ext\" where path like \"%base_url%\";")
+    echo $(mysql $database -u$user<<<"select * from $core_config_data where path like \"%base_url%\";")
 
-    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%web/seo%\";")
-    echo $(mysql $database -u$user<<<"update core_config_data set value=0 where path like \"%web/seo%\";")
-    echo $(mysql $database -u$user<<<"select * from core_config_data where path like \"%web/seo%\";")
+    echo $(mysql $database -u$user<<<"select * from $core_config_data where path like \"%web/seo%\";")
+    echo $(mysql $database -u$user<<<"update $core_config_data set value=0 where path like \"%web/seo%\";")
+    echo $(mysql $database -u$user<<<"select * from $core_config_data where path like \"%web/seo%\";")
 
     echo "Database localized!"
 }
@@ -74,8 +76,12 @@ m2createadminuser(){
 }
 
 m2install(){
-    php56 bin/magento setup:install --db-name="{$1}" --db-user="root" --db-password=""  --admin-user="admin" --admin-password="12qwaszx" --admin-email="a@a.com" --admin-firstname="Developer" --admin-lastname="Younify" --cleanup-database --use-sample-data
+    php56 bin/magento setup:install --db-name="{$1}" --db-user="root" --db-password="{$2}"  --admin-user="admin" --admin-password="12qwaszx" --admin-email="a@a.com" --admin-firstname="Developer" --admin-lastname="Younify" --cleanup-database --use-sample-data
 
+}
+
+removeSpaces(){
+    for d in ./*/ ; do (cd "$d" && for file in *; do mv -v "$file" "$(echo $file | sed 's/\s/_/g')" ; done); done
 }
 
 # Total regeneration of M2 website;
@@ -93,6 +99,11 @@ alias cdr='cd "$(git rev-parse --show-cdup)"'
 # flush caches from anywhere in project
 alias rmc='pushd . >/dev/null;cd "$(git rev-parse --show-cdup)";rm -rf var/cache;echo "cleared cache in $(pwd)/var/cache";popd>/dev/null;'
 
+alias bmsu=' bin/magento setup:upgrade; '
+alias bmcf=' bin/magento cache:flush; '
+alias bmsscd='bin/magento setup:static-content:deploy nl_NL en_US'
+alias bmir='bin/magento indexer:reindex;'
+alias bmsdc='bin/magento setup:di:compile;'
 alias tmux='
 tmux new-session -d "cd ~/projects;vim"
 set -g window-active-style "bg=black";
@@ -102,6 +113,9 @@ tmux splitw -h;
 tmux selectp -t 0;
 tmux -2 attach-session -d;
 '
+alias hosts='sudo vim /etc/hosts'
 
 # Pretty git log
 alias glp='git log --graph --full-history --all --color --pretty=format:"%Cred[%d ] %Cgreen%p -> %h %Cblue%cn(%ce) %Cred%s %n"'
+
+eval $(thefuck --alias)
