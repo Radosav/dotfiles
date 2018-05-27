@@ -117,5 +117,3 @@ alias hosts='sudo vim /etc/hosts'
 
 # Pretty git log
 alias glp='git log --graph --full-history --all --color --pretty=format:"%Cred[%d ] %Cgreen%p -> %h %Cblue%cn(%ce) %Cred%s %n"'
-
-eval $(thefuck --alias)
