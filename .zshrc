@@ -72,7 +72,7 @@ update(){
 
 # Creates admin user for M2, change username and password to your prefference
 m2createadminuser(){
-    n98-magerun2.phar admin:user:create --admin-user="rasa" --admin-firstname="a" --admin-lastname="b" --admin-email="a@gmail.com" --admin-password="archer227"
+    n98-magerun2.phar admin:user:create --admin-user="rasa" --admin-firstname="radosav" --admin-lastname="brajic" --admin-email="rasabrajic@gmail.com" --admin-password="archer227"
 }
 
 m2install(){
