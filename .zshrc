@@ -43,6 +43,24 @@ fixsql(){
     echo "done."
 }
 
+# Use on .sql files as "fixsql somedump.sql"
+pullproject(){
+    echo -n "Pulling from '$argv[1]' ... "
+    mkdir $argv[2];
+    cd $argv[2];
+    mkdir dumps;
+    mkdir docs;
+    mkdir extensions;
+    git clone $agrv[1] public;
+    echo "done."
+}
+
+# cd to projects frolder, change path if needed 
+cpd(){
+    
+}
+alias cdp='cd ~/projects'
+
 # Changes database values to work on local
 # Works for M2 and M1
 localizedb(){
@@ -87,8 +105,6 @@ removeSpaces(){
 # Total regeneration of M2 website;
 alias regenm2='rm -rf var/cache var/generation var/page_cache var/view_preprocessed; bin/magento cache:flush; bin/magento setup:upgrade; bin/magento setup:static-content:deploy nl_NL en_US'
 
-# cd to projects frolder, change path if needed 
-alias cdp='cd ~/projects'
 
 # set correct permissions for M2
 alias m2perms='find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \; && find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \; && chmod u+x bin/magento'
@@ -114,6 +130,8 @@ tmux selectp -t 0;
 tmux -2 attach-session -d;
 '
 alias hosts='sudo vim /etc/hosts'
+
+xmodmap ~/.Xmodmap
 
 # Pretty git log
 alias glp='git log --graph --full-history --all --color --pretty=format:"%Cred[%d ] %Cgreen%p -> %h %Cblue%cn(%ce) %Cred%s %n"'
