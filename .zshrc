@@ -43,23 +43,33 @@ fixsql(){
     echo "done."
 }
 
-# Use on .sql files as "fixsql somedump.sql"
+# Creates folder structure and pulls project from git
 pullproject(){
-    echo -n "Pulling from '$argv[1]' ... "
-    mkdir $argv[2];
-    cd $argv[2];
-    mkdir dumps;
-    mkdir docs;
-    mkdir extensions;
-    git clone $agrv[1] public;
-    echo "done."
+    if [ "$#" -eq  "2" ]
+        then
+            cd ~/Projects;
+            echo -n "Pulling from '$argv[1]' ...\n"
+            mkdir -p $argv[2];
+            cd $argv[2];
+            mkdir -p dumps;
+            mkdir -p docs;
+            mkdir -p extensions;
+            mkdir -p public;
+            cd public;
+            git init;
+            git remote add origin "$argv[1]";
+            git pull origin master;
+            git pull;
+            git branch --set-upstream-to=origin/master master;
+            echo "done.";
+            cd ~/Projects;
+    else
+        echo "Need giturl and name for project";
+    fi
 }
 
 # cd to projects frolder, change path if needed 
-cpd(){
-    
-}
-alias cdp='cd ~/projects'
+alias cdp="cd ~/Projects/";
 
 # Changes database values to work on local
 # Works for M2 and M1
@@ -121,7 +131,7 @@ alias bmsscd='bin/magento setup:static-content:deploy nl_NL en_US'
 alias bmir='bin/magento indexer:reindex;'
 alias bmsdc='bin/magento setup:di:compile;'
 alias tmux='
-tmux new-session -d "cd ~/projects;vim"
+tmux new-session -d "cd ~/Projects;"
 set -g window-active-style "bg=black";
 tmux splitw -v -p 30;
 tmux selectp -t 1;
@@ -132,6 +142,9 @@ tmux -2 attach-session -d;
 alias hosts='sudo vim /etc/hosts'
 
 xmodmap ~/.Xmodmap
+
+alias setphp5="sudo update-alternatives --set php /usr/bin/php5.6"
+alias setphp7="sudo update-alternatives --set php /usr/bin/php7.0"
 
 # Pretty git log
 alias glp='git log --graph --full-history --all --color --pretty=format:"%Cred[%d ] %Cgreen%p -> %h %Cblue%cn(%ce) %Cred%s %n"'
